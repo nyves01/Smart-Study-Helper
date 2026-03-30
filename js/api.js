@@ -1,11 +1,13 @@
-// ─────────────────────────────────────────────
-//  api.js  —  All external API calls
-// ─────────────────────────────────────────────
+───────────────────────────────────────────── All external API calls ─────────────────────────────────────────────
+
+
 
 const WIKI_API = 'https://en.wikipedia.org/api/rest_v1/page';
 const DICT_API = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
-// ── Custom error types ────────────────────────
+
+-------------------- Custom error types --------------------
+
 
 class TopicNotFoundError extends Error {
   constructor(topic, status) {
@@ -31,7 +33,9 @@ class NetworkError extends Error {
   }
 }
 
-// ── Wikipedia ─────────────────────────────────
+
+--------------------Wikipedia --------------------
+
 
 /**
  * Fetches page summary + related pages in parallel.
@@ -85,7 +89,9 @@ async function fetchTopic(topic) {
   return { summary, related };
 }
 
-// ── Free Dictionary API ───────────────────────
+
+-------------------- Free Dictionary API --------------------
+
 
 /**
  * Fetches definition(s) for a single English word.
