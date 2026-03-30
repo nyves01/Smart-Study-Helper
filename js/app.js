@@ -1,8 +1,8 @@
-// ─────────────────────────────────────────────
-//  app.js  —  State management & event wiring
-// ─────────────────────────────────────────────
+───────────────────────────────────────────── State management & event wiring ─────────────────────────────────────────────
 
-// ── Application state ─────────────────────────
+
+
+-------------------- Application state --------------------
 
 let historyStack  = [];  // [{ title: string }]  — breadcrumb trail
 let currentSummary = null;
@@ -10,7 +10,7 @@ let currentRelated = [];
 let savedTopics    = JSON.parse(localStorage.getItem('ssh_saved') ?? '[]');
 let quizOpen       = false;
 
-// ── DOM references ────────────────────────────
+-------------------- DOM references --------------------
 
 const searchInput  = document.getElementById('searchInput');
 const searchBtn    = document.getElementById('searchBtn');
@@ -20,7 +20,7 @@ const darkToggle   = document.getElementById('darkToggle');
 const sidebarToggle = document.getElementById('sidebarToggle');
 const layoutEl     = document.getElementById('layout');
 
-// ── Init dark mode from localStorage ─────────
+-------------------- Init dark mode from localStorage --------------------
 
 (function initDarkMode() {
   const dark = localStorage.getItem('ssh_dark') === 'true';
@@ -31,12 +31,12 @@ const layoutEl     = document.getElementById('layout');
   }
 })();
 
-// ── Init sidebar ──────────────────────────────
+-------------------- Init sidebar --------------------
 
 renderSidebar(savedTopics, sidebarEl);
 wireSidebarEvents();
 
-// ── Global search events ──────────────────────
+-------------------- Global search events --------------------
 
 searchBtn.addEventListener('click', onSearch);
 searchInput.addEventListener('keydown', e => {
@@ -55,7 +55,7 @@ function onSearch() {
   loadTopic(q);
 }
 
-// ── Dark mode toggle ──────────────────────────
+-------------------- Dark mode toggle --------------------
 
 darkToggle.addEventListener('click', () => {
   const nowDark = document.body.classList.toggle('dark');
@@ -64,7 +64,7 @@ darkToggle.addEventListener('click', () => {
   darkToggle.setAttribute('aria-label', nowDark ? 'Switch to light mode' : 'Switch to dark mode');
 });
 
-// ── Sidebar toggle (mobile) ───────────────────
+-------------------- Sidebar toggle (mobile) --------------------
 
 sidebarToggle.addEventListener('click', () => {
   layoutEl.classList.toggle('sidebar-open');
@@ -72,7 +72,7 @@ sidebarToggle.addEventListener('click', () => {
   sidebarToggle.setAttribute('aria-expanded', open);
 });
 
-// ── Core fetch + render ───────────────────────
+-------------------- Core fetch + render --------------------
 
 async function loadTopic(topic, isBackNav = false) {
   renderSpinner(topic, mainEl);
@@ -92,7 +92,7 @@ async function loadTopic(topic, isBackNav = false) {
   }
 }
 
-// ── Wire events on the result card ────────────
+-------------------- Wire events on the result card --------------------
 
 function wireResultEvents() {
   // Related topic chips
@@ -174,7 +174,7 @@ function wireResultEvents() {
   }
 }
 
-// ── Quiz submission events ────────────────────
+-------------------- Quiz submission events --------------------
 
 function wireQuizEvents() {
   let answered   = 0;
@@ -226,7 +226,7 @@ function wireQuizEvents() {
   });
 }
 
-// ── Navigation helpers ────────────────────────
+-------------------- Navigation helpers --------------------
 
 function navigateTo(topic) {
   if (currentSummary) {
@@ -262,7 +262,7 @@ function handleBreadcrumb(indexStr) {
   loadTopic(target.title, true);
 }
 
-// ── Saved topics ──────────────────────────────
+-------------------- Saved topics --------------------
 
 function toggleSave(summary) {
   const idx = savedTopics.findIndex(t => t.title === summary.title);
@@ -311,7 +311,7 @@ function wireSidebarEvents() {
   });
 }
 
-// ── Keyboard shortcut: / to focus search ─────
+-------------------- Keyboard shortcut: / to focus search --------------------
 
 document.addEventListener('keydown', e => {
   if (e.key === '/' && document.activeElement !== searchInput) {
