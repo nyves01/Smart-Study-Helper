@@ -1,8 +1,10 @@
-/* ─────────────────────────────────────────────
-   style.css  —  Smart Study Helper
-   ───────────────────────────────────────────── */
+----------------------------------------------------- style.css  —  Smart Study Helper -----------------------------------------------------
+   
 
-/* ── Reset & Base ────────────────────────────── */
+
+
+-------------------- Reset&Base --------------------
+
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -46,7 +48,9 @@
   --header-h:  140px;
 }
 
-/* ── Dark mode variables ─────────────────────── */
+
+--------------------Dark mode variables --------------------
+
 
 body.dark {
   --c-bg:          #0f172a;
@@ -82,7 +86,8 @@ body {
 a { color: var(--c-primary); }
 button { font-family: var(--font); cursor: pointer; }
 
-/* ── Header ──────────────────────────────────── */
+-------------------- Header --------------------
+
 
 .site-header {
   background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
@@ -132,7 +137,9 @@ button { font-family: var(--font); cursor: pointer; }
 }
 .icon-btn:hover { background: rgba(255,255,255,.28); }
 
-/* ── Search bar ──────────────────────────────── */
+
+-------------------- Search bar --------------------
+
 
 .search-wrap {
   position: absolute;
@@ -194,7 +201,9 @@ button { font-family: var(--font); cursor: pointer; }
   margin-top: .6rem;
 }
 
-/* ── Layout ──────────────────────────────────── */
+
+-------------------- Layout --------------------
+
 
 .layout {
   display: flex;
@@ -205,14 +214,18 @@ button { font-family: var(--font); cursor: pointer; }
   align-items: flex-start;
 }
 
-/* ── Main content ────────────────────────────── */
+
+-------------------- Main content --------------------
+
 
 #main {
   flex: 1;
   min-width: 0;
 }
 
-/* ── Sidebar ─────────────────────────────────── */
+
+-------------------- Sidebar --------------------
+
 
 #sidebar {
   width: var(--sidebar-w);
@@ -309,7 +322,9 @@ button { font-family: var(--font); cursor: pointer; }
 }
 .remove-btn:hover { color: var(--c-wrong); background: var(--c-wrong-bg); }
 
-/* ── Empty state ─────────────────────────────── */
+
+-------------------- Empty state --------------------
+
 
 .empty-state {
   text-align: center;
@@ -324,7 +339,9 @@ button { font-family: var(--font); cursor: pointer; }
 .empty-state h2   { font-size: 1.3rem; font-weight: 700; color: var(--c-text); }
 .empty-state p    { font-size: .9rem; max-width: 360px; }
 
-/* ── Spinner ─────────────────────────────────── */
+
+-------------------- Spinner --------------------
+
 
 .spinner-wrap {
   display: flex;
@@ -344,7 +361,9 @@ button { font-family: var(--font); cursor: pointer; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Error card ──────────────────────────────── */
+
+-------------------- Error card --------------------
+
 
 .error-card {
   background: var(--c-error-bg);
@@ -373,7 +392,9 @@ button { font-family: var(--font); cursor: pointer; }
 }
 .retry-btn:hover { opacity: .85; }
 
-/* ── Breadcrumb ──────────────────────────────── */
+
+-------------------- Breadcrumb --------------------
+
 
 .breadcrumb {
   display: flex;
@@ -398,7 +419,9 @@ button { font-family: var(--font); cursor: pointer; }
 .bread-sep     { color: var(--c-border); }
 .bread-current { font-weight: 700; color: var(--c-text); }
 
-/* ── Result card ─────────────────────────────── */
+
+-------------------- Result card --------------------
+
 
 .result-card {
   background: var(--c-surface);
@@ -414,7 +437,9 @@ button { font-family: var(--font); cursor: pointer; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Result header (image + meta) ────────────── */
+
+-------------------- Result header (image + meta) --------------------
+
 
 .result-header {
   display: flex;
@@ -478,7 +503,9 @@ button { font-family: var(--font); cursor: pointer; }
   color: #fff;
 }
 
-/* ── Result body ─────────────────────────────── */
+
+-------------------- Result body --------------------
+
 
 .result-body { padding: 1.4rem 1.8rem 1.8rem; }
 
@@ -505,7 +532,9 @@ button { font-family: var(--font); cursor: pointer; }
   font-style: italic;
 }
 
-/* ── Filter bar ──────────────────────────────── */
+
+-------------------- Filter bar --------------------
+
 
 .filter-wrap {
   margin-bottom: .85rem;
@@ -525,7 +554,9 @@ button { font-family: var(--font); cursor: pointer; }
 #filterInput:focus { border-color: var(--c-primary); background: var(--c-surface); }
 #filterInput::placeholder { color: #a0aec0; }
 
-/* ── Summary text ────────────────────────────── */
+
+-------------------- Summary text --------------------
+
 
 .summary-text {
   font-size: .975rem;
@@ -539,7 +570,9 @@ button { font-family: var(--font); cursor: pointer; }
   padding: 0 2px;
 }
 
-/* ── Divider ─────────────────────────────────── */
+
+-------------------- Divider --------------------
+
 
 .divider {
   border: none;
@@ -547,7 +580,9 @@ button { font-family: var(--font); cursor: pointer; }
   margin: 1.4rem 0;
 }
 
-/* ── Related topic chips ─────────────────────── */
+
+-------------------- Related topic chips --------------------
+
 
 .related-grid {
   display: grid;
@@ -606,7 +641,9 @@ button { font-family: var(--font); cursor: pointer; }
 body.dark .chip-title    { color: var(--c-primary); }
 body.dark .chip-placeholder { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #bfdbfe; }
 
-/* ── Quiz section ────────────────────────────── */
+
+-------------------- Quiz section --------------------
+
 
 .quiz-row {
   display: flex;
@@ -751,7 +788,9 @@ body.dark .quiz-option:hover { background: #2e1065; }
   font-style: italic;
 }
 
-/* ── Definition tooltip ──────────────────────── */
+
+-------------------- Definition tooltip --------------------
+
 
 .def-tooltip {
   position: fixed;
@@ -788,7 +827,8 @@ body.dark .quiz-option:hover { background: #2e1065; }
 }
 .tip-close:hover { color: #fff; background: rgba(255,255,255,.1); }
 
-/* ── Responsive ──────────────────────────────── */
+
+-------------------- Responsive --------------------
 
 /* Tablet: collapse sidebar behind toggle */
 @media (max-width: 860px) {
