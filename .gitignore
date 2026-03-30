@@ -1,0 +1,32 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependency directories (if npm is ever added)
+node_modules/
+
+# Environment / secrets — NEVER commit API keys
+.env
+.env.local
+.env.*.local
+secrets.json
+
+# Build output
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.bak
