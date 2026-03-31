@@ -1,0 +1,21 @@
+{
+  "name": "smart-study-helper",
+  "version": "1.0.0",
+  "description": "A study helper app with Wikipedia and dictionary APIs",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-session": "^1.19.0",
+    "node-fetch": "^2.7.0",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

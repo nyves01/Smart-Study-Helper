@@ -316,7 +316,8 @@ function renderSidebar(savedTopics, el) {
           ${t.description ? `<div class="saved-desc">${escHtml(t.description)}</div>` : ''}
         </div>
         <button class="remove-btn"
-                data-remove-saved="${escHtml(t.title)}"
+                data-remove-saved="${escHtml(t.id)}"
+                data-title="${escHtml(t.title)}"
                 aria-label="Remove ${escHtml(t.title)} from saved topics"
                 title="Remove">✕</button>
       </li>`;

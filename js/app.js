@@ -7,7 +7,7 @@
 let historyStack  = [];  // [{ title: string }]  — breadcrumb trail
 let currentSummary = null;
 let currentRelated = [];
-let savedTopics    = JSON.parse(localStorage.getItem('ssh_saved') ?? '[]');
+let savedTopics    = [];  // Will be loaded from API
 let quizOpen       = false;
 
 // ── DOM references ────────────────────────────
@@ -18,6 +18,7 @@ const mainEl       = document.getElementById('main');
 const sidebarEl    = document.getElementById('sidebar');
 const darkToggle   = document.getElementById('darkToggle');
 const sidebarToggle = document.getElementById('sidebarToggle');
+const logoutBtn    = document.getElementById('logoutBtn');
 const layoutEl     = document.getElementById('layout');
 
 // ── Init dark mode from localStorage ─────────
@@ -33,8 +34,77 @@ const layoutEl     = document.getElementById('layout');
 
 // ── Init sidebar ──────────────────────────────
 
-renderSidebar(savedTopics, sidebarEl);
-wireSidebarEvents();
+async function initApp() {
+  await loadSavedTopics();
+  renderSidebar(savedTopics, sidebarEl);
+  wireSidebarEvents();
+}
+
+initApp();
+
+// ── Saved topics API functions ────────────────
+
+async function loadSavedTopics() {
+  try {
+    const response = await fetch('/api/saved-topics', {
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      savedTopics = await response.json();
+    } else {
+      console.error('Failed to load saved topics');
+      savedTopics = [];
+    }
+  } catch (error) {
+    console.error('Error loading saved topics:', error);
+    savedTopics = [];
+  }
+}
+
+async function saveTopicToAPI(title, description, thumb) {
+  try {
+    const response = await fetch('/api/saved-topics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ title, description, thumb })
+    });
+
+    if (response.ok) {
+      await loadSavedTopics(); // Refresh the list
+      renderSidebar(savedTopics, sidebarEl);
+      return true;
+    } else {
+      console.error('Failed to save topic');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error saving topic:', error);
+    return false;
+  }
+}
+
+async function deleteTopicFromAPI(topicId) {
+  try {
+    const response = await fetch(`/api/saved-topics/${topicId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      await loadSavedTopics(); // Refresh the list
+      renderSidebar(savedTopics, sidebarEl);
+      return true;
+    } else {
+      console.error('Failed to delete topic');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error deleting topic:', error);
+    return false;
+  }
+}
 
 // ── Global search events ──────────────────────
 
@@ -70,6 +140,25 @@ sidebarToggle.addEventListener('click', () => {
   layoutEl.classList.toggle('sidebar-open');
   const open = layoutEl.classList.contains('sidebar-open');
   sidebarToggle.setAttribute('aria-expanded', open);
+});
+
+// ── Logout button ─────────────────────────────
+
+logoutBtn.addEventListener('click', async () => {
+  try {
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      window.location.href = '/login.html';
+    } else {
+      alert('Logout failed. Please try again.');
+    }
+  } catch (error) {
+    alert('Network error during logout.');
+  }
 });
 
 // ── Core fetch + render ───────────────────────
@@ -264,20 +353,23 @@ function handleBreadcrumb(indexStr) {
 
 // ── Saved topics ──────────────────────────────
 
-function toggleSave(summary) {
-  const idx = savedTopics.findIndex(t => t.title === summary.title);
-  if (idx === -1) {
-    savedTopics.unshift({
-      title:       summary.title,
-      description: summary.description ?? '',
-      thumb:       summary.thumbnail?.source ?? null,
-    });
+async function toggleSave(summary) {
+  const isSaved = savedTopics.some(t => t.title === summary.title);
+
+  if (isSaved) {
+    // Find and delete the topic
+    const topicToDelete = savedTopics.find(t => t.title === summary.title);
+    if (topicToDelete && topicToDelete.id) {
+      await deleteTopicFromAPI(topicToDelete.id);
+    }
   } else {
-    savedTopics.splice(idx, 1);
+    // Save the topic
+    await saveTopicToAPI(
+      summary.title,
+      summary.description ?? '',
+      summary.thumbnail?.source ?? null
+    );
   }
-  localStorage.setItem('ssh_saved', JSON.stringify(savedTopics));
-  renderSidebar(savedTopics, sidebarEl);
-  wireSidebarEvents();
 }
 
 function updateSaveBtnState() {
@@ -298,15 +390,15 @@ function wireSidebarEvents() {
 
   // Remove button inside each saved item
   document.querySelectorAll('[data-remove-saved]').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', async e => {
       e.stopPropagation();
-      const title = btn.dataset.removeSaved;
-      savedTopics = savedTopics.filter(t => t.title !== title);
-      localStorage.setItem('ssh_saved', JSON.stringify(savedTopics));
-      renderSidebar(savedTopics, sidebarEl);
-      wireSidebarEvents();
-      // Reflect unsaved state on result card if it's the current topic
-      if (currentSummary?.title === title) updateSaveBtnState();
+      const topicId = btn.dataset.removeSaved;
+      const title = btn.dataset.title;
+
+      if (await deleteTopicFromAPI(topicId)) {
+        // Reflect unsaved state on result card if it's the current topic
+        if (currentSummary?.title === title) updateSaveBtnState();
+      }
     });
   });
 }

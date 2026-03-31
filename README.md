@@ -24,7 +24,8 @@ Smart Study Helper addresses a genuine academic need: quickly understanding unfa
 | Breadcrumb navigation | Navigate back through previously visited topics |
 | Auto-generated quiz | Fill-in-the-blank questions built from the summary text |
 | Immediate quiz feedback | Correct/incorrect feedback with the right answer revealed |
-| Save topics | Star any topic to save it locally (persisted via localStorage) |
+| **User authentication** | **Register/login with username, email, and password validation** |
+| **Personal saved topics** | **Saved topics are stored per user in a database** |
 | Word definition tooltip | Double-click any word in the summary for its dictionary definition |
 | Dark mode | Toggle between light and dark themes (preference saved) |
 | Responsive layout | Works on desktop, tablet, and mobile |
@@ -50,7 +51,16 @@ Smart Study Helper addresses a genuine academic need: quickly understanding unfa
 - **API Key:** None required. This is a free, open API.
 - **Credit:** meetDeveloper — https://github.com/meetDeveloper/freeDictionaryAPI
 
-> **Security note:** Neither API requires keys, tokens, or any credentials. There is no sensitive information in this repository.
+## Database
+
+The application uses **SQLite** for user data storage:
+- **File:** `users.db` (created automatically on first run)
+- **Tables:**
+  - `users` — User accounts with hashed passwords
+  - `saved_topics` — User-specific saved topics
+- **Security:** Passwords are hashed with bcrypt, sessions are server-side
+
+> **Note:** The database is created automatically when you start the server. No manual setup required.
 
 ---
 
@@ -58,14 +68,21 @@ Smart Study Helper addresses a genuine academic need: quickly understanding unfa
 
 ```
 smart-study-helper/
-├── index.html          # Application entry point
+├── index.html          # Main application entry point
+├── login.html          # User login/registration page
 ├── css/
-│   └── style.css       # All styling (light/dark themes, responsive layout)
+│   └── style.css       # All styling (light/dark themes, responsive layout, login page)
 ├── js/
-│   ├── api.js          # All fetch calls and custom error classes
+│   ├── api.js          # Client-side API calls (proxied through backend)
+│   ├── auth.js         # Login/registration form handling
+│   ├── auth-check.js   # Authentication verification on app load
 │   ├── quiz.js         # Quiz generation logic
 │   ├── render.js       # DOM-building functions (pure, no side effects)
 │   └── app.js          # State management and event wiring
+├── backend/
+│   └── server.js       # Express server with API proxy and user authentication
+├── users.db            # SQLite database (created automatically)
+├── package.json        # Node.js dependencies and scripts
 ├── .gitignore
 └── README.md
 ```
@@ -74,6 +91,7 @@ smart-study-helper/
 
 ## Running Locally
 
+### Option 1: Static Files Only (APIs visible in browser)
 No build step or package installation is required.
 
 1. Clone the repository:
@@ -92,7 +110,45 @@ No build step or package installation is required.
 
 3. Type a topic into the search bar and press **Search** or **Enter**.
 
-> The app calls Wikipedia's API directly from the browser. No local server is strictly required, but serving via HTTP avoids any browser restrictions on `file://` URLs.
+> **Note:** With this method, API calls are made directly from the browser, so the API endpoints and logic are visible in browser developer tools.
+
+### Option 2: With Backend Proxy (APIs hidden + User Authentication)
+
+1. Install Node.js dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the backend server:
+   ```bash
+   npm start
+   # or for development with auto-restart:
+   npm run dev
+   ```
+
+3. Open your browser to `http://localhost:3000`
+
+> **Features with backend:**
+> - **API calls are proxied** through your server, so external API endpoints are hidden from users
+> - **User authentication** with registration and login
+> - **Personal saved topics** stored per user in SQLite database
+> - **Session management** for secure user sessions
+
+### First Time Setup
+
+When you first visit the app:
+1. You'll be redirected to the login page
+2. Click "Register" to create a new account
+3. Fill in username, email, and password (all validated)
+4. After registration, you'll be automatically logged in
+5. Start searching and saving topics!
+
+### User Features
+
+- **Register**: Create account with username, email, password validation
+- **Login**: Sign in with username/email and password
+- **Personal Topics**: Saved topics are stored per user (not shared)
+- **Logout**: Secure logout that clears your session
 
 ---
 

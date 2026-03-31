@@ -1,8 +1,6 @@
-/* ─────────────────────────────────────────────
-   style.css  —  Smart Study Helper
-   ───────────────────────────────────────────── */
+------------------------ Smart Study Helper ------------------------
 
-/* ── Reset & Base ────────────────────────────── */
+------------------------Reset & Base------------------------
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -788,7 +786,7 @@ body.dark .quiz-option:hover { background: #2e1065; }
 }
 .tip-close:hover { color: #fff; background: rgba(255,255,255,.1); }
 
-/* ── Responsive ──────────────────────────────── */
+/* ----------------- Responsive -----------------
 
 /* Tablet: collapse sidebar behind toggle */
 @media (max-width: 860px) {
@@ -837,4 +835,174 @@ body.dark .quiz-option:hover { background: #2e1065; }
 :focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
+}
+
+/* ───────────────────────────────────────────── */
+/*                    LOGIN PAGE                 */
+/* ───────────────────────────────────────────── */
+
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-h) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card {
+  background: var(--c-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: 0.5rem;
+}
+
+.login-header p {
+  color: var(--c-text-muted);
+  font-size: 0.95rem;
+}
+
+.auth-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--c-surface-2);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--c-text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-tab.active {
+  background: var(--c-primary);
+  color: white;
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--c-text);
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--c-border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+  background: var(--c-surface);
+  color: var(--c-text);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--c-primary);
+}
+
+.error-message {
+  color: var(--c-wrong);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  min-height: 1rem;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--c-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.auth-submit-btn:hover {
+  background: var(--c-primary-h);
+}
+
+.auth-submit-btn:disabled {
+  background: var(--c-text-muted);
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--c-border);
+}
+
+.auth-footer p {
+  color: var(--c-text-muted);
+  font-size: 0.85rem;
+}
+
+/* Dark mode for login page */
+body.dark .login-card {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+}
+
+body.dark .auth-tabs {
+  background: var(--c-surface-2);
+}
+
+body.dark .form-group input {
+  background: var(--c-surface-2);
+  border-color: var(--c-border);
+  color: var(--c-text);
+}
+
+body.dark .form-group input:focus {
+  border-color: var(--c-primary);
 }

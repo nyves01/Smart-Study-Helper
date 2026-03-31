@@ -1,9 +1,6 @@
 // ─────────────────────────────────────────────
-//  api.js  —  All external API calls
+//  api.js  —  All external API calls (proxied through backend)
 // ─────────────────────────────────────────────
-
-const WIKI_API = 'https://en.wikipedia.org/api/rest_v1/page';
-const DICT_API = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
 // ── Custom error types ────────────────────────
 
@@ -39,50 +36,24 @@ class NetworkError extends Error {
  * @returns {{ summary: object, related: object[] }}
  */
 async function fetchTopic(topic) {
-  const key = encodeURIComponent(topic.trim().replace(/ /g, '_'));
-  const headers = { Accept: 'application/json' };
-
-  let sumResult, relResult;
   try {
-    [sumResult, relResult] = await Promise.allSettled([
-      fetch(`${WIKI_API}/summary/${key}`, { headers }),
-      fetch(`${WIKI_API}/related/${key}`,  { headers }),
-    ]);
-  } catch (e) {
-    throw new NetworkError('Could not reach Wikipedia. Check your internet connection.');
-  }
-
-  // Summary is required — fail fast
-  if (sumResult.status === 'rejected') {
-    throw new NetworkError(sumResult.reason?.message);
-  }
-  if (!sumResult.value.ok) {
-    throw new TopicNotFoundError(topic, sumResult.value.status);
-  }
-
-  let summary;
-  try {
-    summary = await sumResult.value.json();
-  } catch {
-    throw new NetworkError('Received an invalid response from Wikipedia.');
-  }
-
-  if (summary.type === 'disambiguation') {
-    throw new DisambiguationError(topic);
-  }
-
-  // Related pages are optional — degrade silently
-  let related = [];
-  if (relResult.status === 'fulfilled' && relResult.value.ok) {
-    try {
-      const relData = await relResult.value.json();
-      related = relData.pages ?? [];
-    } catch {
-      // silently ignore malformed related response
+    const response = await fetch(`/api/topic/${encodeURIComponent(topic)}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new TopicNotFoundError(topic, response.status);
+      } else if (response.status === 400) {
+        throw new DisambiguationError(topic);
+      } else {
+        throw new NetworkError('Could not reach the server.');
+      }
     }
+    return await response.json();
+  } catch (error) {
+    if (error instanceof TopicNotFoundError || error instanceof DisambiguationError) {
+      throw error;
+    }
+    throw new NetworkError('Could not reach the server. Check your connection.');
   }
-
-  return { summary, related };
 }
 
 // ── Free Dictionary API ───────────────────────
@@ -93,12 +64,13 @@ async function fetchTopic(topic) {
  * @returns {object[]}  Array of dictionary entries
  */
 async function fetchDefinition(word) {
-  let res;
   try {
-    res = await fetch(`${DICT_API}/${encodeURIComponent(word.toLowerCase())}`);
-  } catch {
-    throw new NetworkError('Could not reach the dictionary API.');
+    const response = await fetch(`/api/definition/${encodeURIComponent(word)}`);
+    if (!response.ok) {
+      throw new Error('No definition found');
+    }
+    return await response.json();
+  } catch (error) {
+    throw new NetworkError('Could not reach the dictionary server.');
   }
-  if (!res.ok) throw new Error('No definition found');
-  return res.json();
 }
