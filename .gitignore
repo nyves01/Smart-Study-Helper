@@ -1,8 +1,16 @@
 # Dependencies
 node_modules/
 
-# Database
-users.db*
+# Environment / secrets — NEVER commit API keys
+.env
+.env.local
+.env.*.local
+secrets.json
 
-# Test files
-cookies.txt
+# Build output
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.bak

@@ -1,8 +1,8 @@
-// ─────────────────────────────────────────────
-//  app.js  —  State management & event wiring
-// ─────────────────────────────────────────────
+//───────────────────────────────────────────── State management & event wiring ─────────────────────────────────────────────
 
-// ── Application state ─────────────────────────
+
+
+//-------------------- Application state --------------------
 
 let historyStack  = [];  // [{ title: string }]  — breadcrumb trail
 let currentSummary = null;
@@ -10,7 +10,7 @@ let currentRelated = [];
 let savedTopics    = [];  // Will be loaded from API
 let quizOpen       = false;
 
-// ── DOM references ────────────────────────────
+//-------------------- DOM references --------------------
 
 const searchInput  = document.getElementById('searchInput');
 const searchBtn    = document.getElementById('searchBtn');
@@ -21,7 +21,7 @@ const sidebarToggle = document.getElementById('sidebarToggle');
 const logoutBtn    = document.getElementById('logoutBtn');
 const layoutEl     = document.getElementById('layout');
 
-// ── Init dark mode from localStorage ─────────
+//-------------------- Init dark mode from localStorage --------------------
 
 (function initDarkMode() {
   const dark = localStorage.getItem('ssh_dark') === 'true';
@@ -32,7 +32,7 @@ const layoutEl     = document.getElementById('layout');
   }
 })();
 
-// ── Init sidebar ──────────────────────────────
+//-------------------- Init sidebar --------------------
 
 async function initApp() {
   await loadSavedTopics();
@@ -134,7 +134,7 @@ darkToggle.addEventListener('click', () => {
   darkToggle.setAttribute('aria-label', nowDark ? 'Switch to light mode' : 'Switch to dark mode');
 });
 
-// ── Sidebar toggle (mobile) ───────────────────
+// -------------------- Sidebar toggle (mobile) --------------------
 
 sidebarToggle.addEventListener('click', () => {
   layoutEl.classList.toggle('sidebar-open');
@@ -181,7 +181,7 @@ async function loadTopic(topic, isBackNav = false) {
   }
 }
 
-// ── Wire events on the result card ────────────
+//-------------------- Wire events on the result card --------------------
 
 function wireResultEvents() {
   // Related topic chips
@@ -263,7 +263,7 @@ function wireResultEvents() {
   }
 }
 
-// ── Quiz submission events ────────────────────
+// ── Quiz submission events ──────────────────────────────
 
 function wireQuizEvents() {
   let answered   = 0;
@@ -315,7 +315,7 @@ function wireQuizEvents() {
   });
 }
 
-// ── Navigation helpers ────────────────────────
+// -------------------- Navigation helpers --------------------
 
 function navigateTo(topic) {
   if (currentSummary) {
@@ -403,7 +403,7 @@ function wireSidebarEvents() {
   });
 }
 
-// ── Keyboard shortcut: / to focus search ─────
+// -------------------- Keyboard shortcut: / to focus search --------------------
 
 document.addEventListener('keydown', e => {
   if (e.key === '/' && document.activeElement !== searchInput) {

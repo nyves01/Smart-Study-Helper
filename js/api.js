@@ -2,7 +2,9 @@
 //  api.js  —  All external API calls (proxied through backend)
 // ─────────────────────────────────────────────
 
-// ── Custom error types ────────────────────────
+
+// -------------------- Custom error types --------------------
+
 
 class TopicNotFoundError extends Error {
   constructor(topic, status) {
@@ -28,7 +30,9 @@ class NetworkError extends Error {
   }
 }
 
-// ── Wikipedia ─────────────────────────────────
+
+// --------------------Wikipedia --------------------
+
 
 /**
  * Fetches page summary + related pages in parallel.
