@@ -1,7 +1,9 @@
----------------------------------------- render.js  —  All DOM building / display ----------------------------------------
-  
+// ────────────────────────────────────────────────────────
+//  render.js  —  All DOM building / display
+// ────────────────────────────────────────────────────────
 
--------------------- Utilities --------------------
+
+// -------------------- Utilities --------------------
 
 /** Escape a string for safe insertion as HTML text content. */
 function escHtml(str) {
@@ -53,7 +55,7 @@ function applyFilter(highlightedHtml, query) {
   );
 }
 
--------------------- Spinner --------------------
+// -------------------- Spinner --------------------
 
 function renderSpinner(label, el) {
   el.innerHTML = `
@@ -63,7 +65,7 @@ function renderSpinner(label, el) {
     </div>`;
 }
 
--------------------- Error card --------------------
+// -------------------- Error card --------------------
 
 function renderError(err, el) {
   let heading, body, hint;
@@ -102,7 +104,7 @@ function renderError(err, el) {
     </div>`;
 }
 
--------------------- Breadcrumb --------------------
+// -------------------- Breadcrumb --------------------
 
 /**
  * @param {{ title: string }[]} history  Stack of previously visited topics
@@ -130,7 +132,7 @@ function renderBreadcrumb(history, current) {
     </nav>`;
 }
 
--------------------- Main result card --------------------
+// -------------------- Main result card --------------------
 
 /**
  * Build and inject the full result card into el.
@@ -217,7 +219,7 @@ function renderResult(summary, related, el, history = []) {
     </div>`;
 }
 
--------------------- Related topic chip --------------------
+// -------------------- Related topic chip --------------------
 
 function renderChip(r) {
   const letter = escHtml((r.title ?? '?').charAt(0).toUpperCase());
@@ -239,7 +241,7 @@ function renderChip(r) {
     </div>`;
 }
 
--------------------- Quiz panel --------------------
+// -------------------- Quiz panel --------------------
 
 /**
  * Build and inject the quiz questions into el.
@@ -272,7 +274,7 @@ function renderQuizPanel(questions, el) {
       </form>`).join('')}`;
 }
 
--------------------- Sidebar --------------------
+// -------------------- Sidebar --------------------
 
 /**
  * Build and inject the saved-topics sidebar.
@@ -325,7 +327,7 @@ function renderSidebar(savedTopics, el) {
   el.innerHTML = header + `<ul class="saved-list" role="list">${items}</ul>`;
 }
 
--------------------- Definition tooltip --------------------
+// -------------------- Definition tooltip --------------------
 
 let _tooltipTimer = null;
 

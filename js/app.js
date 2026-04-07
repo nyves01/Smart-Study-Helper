@@ -46,7 +46,7 @@ initApp();
 
 async function loadSavedTopics() {
   try {
-    const response = await fetch('/api/saved-topics', {
+    const response = await fetch(withApiBase('/api/saved-topics'), {
       credentials: 'include'
     });
 
@@ -64,7 +64,7 @@ async function loadSavedTopics() {
 
 async function saveTopicToAPI(title, description, thumb) {
   try {
-    const response = await fetch('/api/saved-topics', {
+    const response = await fetch(withApiBase('/api/saved-topics'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -87,7 +87,7 @@ async function saveTopicToAPI(title, description, thumb) {
 
 async function deleteTopicFromAPI(topicId) {
   try {
-    const response = await fetch(`/api/saved-topics/${topicId}`, {
+    const response = await fetch(withApiBase(`/api/saved-topics/${topicId}`), {
       method: 'DELETE',
       credentials: 'include'
     });
@@ -146,13 +146,13 @@ sidebarToggle.addEventListener('click', () => {
 
 logoutBtn.addEventListener('click', async () => {
   try {
-    const response = await fetch('/api/auth/logout', {
+    const response = await fetch(withApiBase('/api/auth/logout'), {
       method: 'POST',
       credentials: 'include'
     });
 
     if (response.ok) {
-      window.location.href = '/login.html';
+      window.location.href = withApiBase('/login.html');
     } else {
       alert('Logout failed. Please try again.');
     }

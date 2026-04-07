@@ -62,18 +62,23 @@ loginForm.addEventListener('submit', async (e) => {
   if (hasErrors) return;
 
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch(withApiBase('/api/auth/login'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ username, password })
     });
 
-    const data = await response.json();
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
 
     if (response.ok) {
       // Redirect to main app
-      window.location.href = '/';
+      window.location.href = withApiBase('/');
     } else {
       showError('loginError', data.error || 'Login failed');
     }
@@ -117,18 +122,23 @@ registerForm.addEventListener('submit', async (e) => {
   if (hasErrors) return;
 
   try {
-    const response = await fetch('/api/auth/register', {
+    const response = await fetch(withApiBase('/api/auth/register'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ username, email, password })
     });
 
-    const data = await response.json();
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      data = null;
+    }
 
     if (response.ok) {
       // Auto-login after successful registration
-      window.location.href = '/';
+      window.location.href = withApiBase('/');
     } else {
       showError('registerError', data.error || 'Registration failed');
     }

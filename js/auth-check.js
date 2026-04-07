@@ -5,7 +5,7 @@
 // Check if user is authenticated when the app loads
 async function checkAuth() {
   try {
-    const response = await fetch('/api/auth/me', {
+    const response = await fetch(withApiBase('/api/auth/me'), {
       credentials: 'include'
     });
 
@@ -16,12 +16,12 @@ async function checkAuth() {
       return true;
     } else {
       // User not authenticated, redirect to login
-      window.location.href = '/login.html';
+      window.location.href = withApiBase('/login.html');
       return false;
     }
   } catch (error) {
     // Network error, redirect to login
-    window.location.href = '/login.html';
+    window.location.href = withApiBase('/login.html');
     return false;
   }
 }

@@ -1,7 +1,9 @@
--------------------- quiz.js  —  Client-side quiz generation --------------------
+// ────────────────────────────────────────────────────────
+//  quiz.js  —  Client-side quiz generation
+// ────────────────────────────────────────────────────────
 
 
- -------------------- Guaranteed questions even for short summaries --------------------
+// -------------------- Guaranteed questions even for short summaries --------------------
 
 // Common words that happen to be capitalised but aren't useful keywords
 const STOP_WORDS = new Set([
