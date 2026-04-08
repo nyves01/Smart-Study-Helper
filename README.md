@@ -2,7 +2,7 @@
 
 A browser-based study tool that lets students look up any topic and instantly receive a structured Wikipedia summary, keyword highlights, related subjects, and an auto-generated quiz — all from a clean, responsive interface.
 
-**Live URL (Load Balancer):** `http://<LB01_IP>/`
+**Live URL (Load Balancer):** `https://www.nyves.tech/`
 
 ---
 
@@ -91,28 +91,9 @@ smart-study-helper/
 
 ## Running Locally
 
-### Option 1: Static Files Only (APIs visible in browser)
-No build step or package installation is required.
+This app should be run with the Node backend enabled.
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/<your-username>/smart-study-helper.git
-   cd smart-study-helper
-   ```
-
-2. Open `index.html` directly in any modern browser:
-   - Double-click `index.html`, **or**
-   - Serve it with Python for a proper HTTP context:
-     ```bash
-     python3 -m http.server 8080
-     # then open http://localhost:8080 in your browser
-     ```
-
-3. Type a topic into the search bar and press **Search** or **Enter**.
-
-> **Note:** With this method, API calls are made directly from the browser, so the API endpoints and logic are visible in browser developer tools.
-
-### Option 2: With Backend Proxy (APIs hidden + User Authentication)
+### Start the app
 
 1. Install Node.js dependencies:
    ```bash
@@ -128,11 +109,21 @@ No build step or package installation is required.
 
 3. Open your browser to `http://localhost:3000`
 
-> **Features with backend:**
-> - **API calls are proxied** through your server, so external API endpoints are hidden from users
-> - **User authentication** with registration and login
-> - **Personal saved topics** stored per user in SQLite database
-> - **Session management** for secure user sessions
+### Why backend mode is required
+- **Authentication and sessions** are handled server-side.
+- **Saved topics** are stored in SQLite via backend routes.
+- **Wikipedia and dictionary calls** are proxied through `/api/*` endpoints.
+
+If you open only static files without the backend, login, saved topics, and search requests can fail.
+
+### Quick health check
+Run this command while the server is up:
+
+```bash
+curl -i http://localhost:3000/api/auth/me
+```
+
+Expected result when not logged in: `401 Not authenticated`.
 
 ### First Time Setup
 
@@ -152,16 +143,38 @@ When you first visit the app:
 
 ---
 
+## Troubleshooting
+
+### "Network error. Please try again." on Login/Register
+- Make sure the backend is running (`npm start`).
+- Open the app from `http://localhost:3000`.
+- Hard-refresh the page (`Ctrl+Shift+R`) after code changes.
+
+### Login succeeds, then you get signed out immediately
+- This usually means mixed origins (for example, logging in on one port and using the app on another).
+- Use the same origin for login and app pages, preferably `http://localhost:3000`.
+
+### Search is not working
+- Verify backend route availability:
+
+  ```bash
+  curl -s "http://localhost:3000/api/topic/Quantum%20Computing" | head
+  ```
+
+- `Python` may return a disambiguation response. Try a specific term like `Python programming language`.
+
+---
+
 ## Deployment
 
 ### Prerequisites
-- Two Ubuntu/Debian web servers: **Web01** and **Web02**
-- One load balancer server: **Lb01**
+- Two Ubuntu/Debian web servers: **6970-web-01** (44.203.97.109) and **6970-web-02** (35.171.8.246)
+- One load balancer server: **6970-lb-01** (98.93.138.68)
 - Nginx installed on all three
 
 ### Step 1 — Deploy to Web01 and Web02
 
-Run the following on **both** Web01 and Web02:
+Run the following on **both** 6970-web-01 and 6970-web-02:
 
 ```bash
 # Install Nginx
@@ -171,8 +184,8 @@ sudo apt update && sudo apt install -y nginx
 sudo mkdir -p /var/www/studyhelper
 
 # Copy project files (run from your local machine)
-scp -r ./* user@<WEB01_IP>:/var/www/studyhelper/
-scp -r ./* user@<WEB02_IP>:/var/www/studyhelper/
+scp -r ./* user@44.203.97.109:/var/www/studyhelper/
+scp -r ./* user@35.171.8.246:/var/www/studyhelper/
 ```
 
 Create the Nginx site config on **both** servers:
@@ -207,23 +220,23 @@ sudo nginx -t && sudo systemctl reload nginx
 
 Verify each server independently:
 ```
-http://<WEB01_IP>/   → should show the app
-http://<WEB02_IP>/   → should show the app
+https://nyves.tech/   → should show the app
+https://web-02.nyves.tech/   → should show the app
 ```
 
-### Step 2 — Configure the Load Balancer (Lb01)
+### Step 2 — Configure the Load Balancer (6970-lb-01)
 
 ```bash
 sudo apt update && sudo apt install -y nginx
 sudo nano /etc/nginx/sites-available/studyhelper-lb
 ```
 
-Paste the following (replace IPs):
+Paste the following:
 
 ```nginx
 upstream studyhelper_pool {
-    server <WEB01_IP>;
-    server <WEB02_IP>;
+    server 44.203.97.109;
+    server 35.171.8.246;
 }
 
 server {
@@ -251,14 +264,14 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ```bash
 # Refresh multiple times — Nginx distributes round-robin by default
-curl -s http://<LB01_IP>/ | grep "<title>"
+curl -s http://98.93.138.68/ | grep "<title>"
 
 # Confirm traffic on both servers by watching their access logs
-sudo tail -f /var/log/nginx/access.log   # run on Web01
-sudo tail -f /var/log/nginx/access.log   # run on Web02
+sudo tail -f /var/log/nginx/access.log   # run on 6970-web-01
+sudo tail -f /var/log/nginx/access.log   # run on 6970-web-02
 ```
 
-Access the app through the load balancer: `http://<LB01_IP>/`
+Access the app through the load balancer: `http://98.93.138.68/`
 
 ---
 
