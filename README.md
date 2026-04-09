@@ -327,3 +327,4 @@ No third-party JavaScript libraries or frameworks were used. All code is vanilla
 | **Data Presentation (5 pts)** | Title + thumbnail + description + highlighted summary + related chips with images + quiz panel. Clear visual hierarchy. |
 | **README Quality (5 pts)** | This file — covers local setup, deployment, API details, error handling, challenges, and attributions. |
 | **API Attribution (5 pts)** | Wikimedia Foundation and meetDeveloper credited in the attributions table above. |
+https://www.loom.com/share/62be1faf01b84ac5a97512045aff2aca
